@@ -162,6 +162,9 @@ function sanitizeMappings (json) {
   for (let key in json) {
     let val = json[key]
     key = hex2dec(key)
+    if (!isNaN(val)) val = Number(val)
+    if (val === 'true') val = true
+    if (val === 'false') val = false
     ret[key] = val
   }
   return ret

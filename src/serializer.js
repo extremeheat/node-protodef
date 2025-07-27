@@ -43,6 +43,7 @@ class Parser extends Transform {
       try {
         packet = this.parsePacketBuffer(this.queue)
       } catch (e) {
+        console.log('EBuf', this.queue.toString('hex'))
         if (e.partialReadError) { return cb() } else {
           e.buffer = this.queue
           this.queue = Buffer.alloc(0)
@@ -77,6 +78,7 @@ class FullPacketParser extends Transform {
           JSON.stringify(packet.data) + '; buffer :' + chunk.toString('hex'))
       }
     } catch (e) {
+      console.log('EBuf', chunk.toString('hex'))
       if (e.partialReadError) {
         if (!this.noErrorLogging) {
           console.log(e.stack)

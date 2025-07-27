@@ -7,6 +7,17 @@ const utilsDatatypes = require('./datatypes/compiler-utils')
 
 const { tryCatch } = require('./utils')
 
+const fs = require('fs')
+const crypto = require('crypto')
+function eval (code) {
+  const digest = code.length
+  if (!fs.existsSync(`${__dirname}/code_${digest}.js`)) {
+    fs.writeFileSync(`${__dirname}/code_${digest}.js`, code.replace('() =>', 'module.exports = (native, PartialReadError) =>'))
+  }
+  const x = require(`${__dirname}/code_${digest}.js`)
+  return x
+}
+
 class ProtoDefCompiler {
   constructor () {
     this.readCompiler = new ReadCompiler()
@@ -259,7 +270,7 @@ class Compiler {
     // Local variable to provide some context to eval()
     const native = this.native // eslint-disable-line
     const { PartialReadError } = require('./utils') // eslint-disable-line
-    return eval(code)() // eslint-disable-line
+    return eval(code)(native, PartialReadError) // eslint-disable-line
   }
 }
 
